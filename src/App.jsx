@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import MovieGrid from "./pages/MovieGrid";
+import Footer from "./components/Footer";
 
 function App() {
   const [category, setCategory] = useState("trending");
@@ -42,6 +43,7 @@ function App() {
 
       {/* Movie Grid */}
       <MovieGrid category={category} searchQuery={searchQuery} />
+      <Footer/>
     </div>
   );
 }

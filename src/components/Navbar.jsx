@@ -5,13 +5,6 @@ const Navbar = ({ onSearch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchText.trim() !== "") {
-      onSearch(searchText.trim());
-      setSearchText(""); // Clear input
-    }
-  };
 
   return (
     <nav className="w-full bg-gradient-to-r from-purple-700 to-indigo-600 shadow-lg fixed top-0 z-50">
