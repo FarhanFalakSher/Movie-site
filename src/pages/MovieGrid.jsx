@@ -4,24 +4,34 @@ import MovieCard from "./MovieCard";
 
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-const MovieGrid = ({ category }) => {
+const MovieGrid = ({ category, searchQuery }) => {
   const [movies, setMovies] = useState([]);
   const [trailers, setTrailers] = useState({});
-  const [selectedTrailer, setSelectedTrailer] = useState(null); // Currently playing trailer
+  const [selectedTrailer, setSelectedTrailer] = useState(null);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const endpoints = {
-          trending: `https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}`,
-          popular: `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`,
-          toprated: `https://api.themoviedb.org/3/movie/top_rated?api_key=${TMDB_API_KEY}&language=en-US&page=1`,
-        };
+        let url;
+        if (searchQuery) {
+          // Search query URL
+          url = `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(
+            searchQuery
+          )}`;
+        } else {
+          // Category URL
+          const endpoints = {
+            trending: `https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}`,
+            popular: `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`,
+            toprated: `https://api.themoviedb.org/3/movie/top_rated?api_key=${TMDB_API_KEY}&language=en-US&page=1`,
+          };
+          url = endpoints[category];
+        }
 
-        const { data } = await axios.get(endpoints[category]);
+        const { data } = await axios.get(url);
         setMovies(data.results);
 
-        // Fetch trailers
+        // Fetch trailers for displayed movies
         const trailerData = {};
         await Promise.all(
           data.results.map(async (movie) => {
@@ -47,21 +57,35 @@ const MovieGrid = ({ category }) => {
     };
 
     fetchMovies();
-  }, [category]);
+  }, [category, searchQuery]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-3xl font-bold mb-6 text-white capitalize">{category} Movies</h2>
+      {searchQuery ? (
+        <h2 className="text-2xl font-bold mb-6 text-white">
+          Search results for: "{searchQuery}"
+        </h2>
+      ) : (
+        <h2 className="text-3xl font-bold mb-6 text-white capitalize">
+          {category} Movies
+        </h2>
+      )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {movies.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            movie={movie}
-            trailerUrl={trailers[movie.id]}
-            onPlay={(url) => setSelectedTrailer(url)} // pass to MovieCard
-          />
-        ))}
+        {movies.length > 0 ? (
+          movies.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+              trailerUrl={trailers[movie.id]}
+              onPlay={(url) => setSelectedTrailer(url)}
+            />
+          ))
+        ) : (
+          <p className="text-white col-span-full text-center">
+            No movies found.
+          </p>
+        )}
       </div>
 
       {/* Fullscreen Trailer Overlay */}

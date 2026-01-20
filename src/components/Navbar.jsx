@@ -34,24 +34,7 @@ const Navbar = ({ onSearch }) => {
             ))}
 
             {/* Search Form */}
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex items-center ml-4"
-            >
-              <input
-                type="text"
-                placeholder="Search movies..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                className="px-3 py-1 rounded-l-md text-black focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-yellow-400 px-3 py-1 rounded-r-md text-black font-semibold hover:bg-yellow-500 transition-colors"
-              >
-                <FaSearch />
-              </button>
-            </form>
+          
           </div>
 
           {/* Mobile Menu Button */}
@@ -81,24 +64,7 @@ const Navbar = ({ onSearch }) => {
           ))}
 
           {/* Mobile Search */}
-          <form
-            onSubmit={handleSearchSubmit}
-            className="mt-4 flex items-center"
-          >
-            <input
-              type="text"
-              placeholder="Search movies..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              className="px-3 py-2 rounded-l-md text-black w-full focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="bg-yellow-400 px-3 py-2 rounded-r-md text-black font-semibold hover:bg-yellow-500 transition-colors"
-            >
-              <FaSearch />
-            </button>
-          </form>
+         
         </div>
       )}
     </nav>
